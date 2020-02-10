@@ -2,7 +2,7 @@
 @section('content')
     <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('{{asset('styleFrontend/images/bg-01.jpg')}}');">
         <h2 class="ltext-105 cl0 txt-center">
-            Contact
+            Liên hệ
         </h2>
     </section>
     <!-- Content page -->

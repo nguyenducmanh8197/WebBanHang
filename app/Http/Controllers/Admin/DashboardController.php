@@ -44,15 +44,15 @@ class DashboardController extends BaseController
             ->get();
         $labels = [];
         $data = [];
-        $order_sucsess_static = OrderDetail::select('order_detail.quantity','order_detail.price','order.created_time as created_at')
-            ->selectRaw("DATE_FORMAT(order.created_time, '%y-%m') as date_format")
-            ->groupBy('order_detail.quantity','order_detail.price','order.created_time','date_format')
+        $order_sucsess_static = OrderDetail::selectRaw('SUM(order_detail.quantity * order_detail.price) as total')
+            ->selectRaw("DATE_FORMAT(order.created_time, '%Y-%m-%d') as date_format")
+            ->groupBy('date_format')
             ->leftJoin('order','order_detail.order_id','order.id')
             ->where('order.status',ORDER_THANH_CONG)
             ->get();
         foreach ($order_sucsess_static as $value){
-            $labels[] = date('m/Y', strtotime($value['created_at']));
-            $data[] =  $value->quantity*$value->price;
+            $labels[] = date('d-m-Y)', strtotime($value['date_format']));
+            $data[] =  $value->total;
         }
         return $this->render('admin.inc.content', compact('total_order','total_price','total_order_sucess','total','total_price_sucsess','order_process','labels','data'));
     }

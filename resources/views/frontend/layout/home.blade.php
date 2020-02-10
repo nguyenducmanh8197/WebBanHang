@@ -230,14 +230,14 @@
                                     <div>
                                         @if($product->product_price_discount == 0)
                                             <span class="stext-105 cl3">
-                                                ${{number_format($product->product_price)}}₫
+                                                {{number_format($product->product_price)}}₫
 								            </span>
                                         @else
                                             <span class="stext-105 cl3" style="color: red;">
-                                                ${{number_format($product->product_price_discount)}}₫
+                                                {{number_format($product->product_price_discount)}}₫
 								            </span>
                                             <span class="stext-105 cl3" style="text-decoration: line-through">
-                                                ${{number_format($product->product_price)}}₫
+                                                {{number_format($product->product_price)}}₫
 								            </span>
                                         @endif
                                     </div>
@@ -396,14 +396,14 @@
                                     <div>
                                         @if($product->product_price_discount == 0)
                                             <span class="stext-105 cl3">
-                                                ${{number_format($product->product_price)}}₫
+                                                {{number_format($product->product_price)}}₫
 								            </span>
                                         @else
                                             <span class="stext-105 cl3" style="color: red;">
-                                                ${{number_format($product->product_price_discount)}}₫
+                                                {{number_format($product->product_price_discount)}}₫
 								            </span>
                                             <span class="stext-105 cl3" style="text-decoration: line-through">
-                                                ${{number_format($product->product_price)}}₫
+                                                {{number_format($product->product_price)}}₫
 								            </span>
                                         @endif
                                     </div>

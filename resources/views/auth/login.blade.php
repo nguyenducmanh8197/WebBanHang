@@ -95,18 +95,14 @@
                                     @if (Route::has('register'))
                                     <a class="small" href="{{ route('register') }}">Create an Account!</a>
                                     @endif
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <!-- Bootstrap core JavaScript-->

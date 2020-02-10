@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Model\Slide;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -12,10 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
 {
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
         $this->_sidebar = 'users';
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,10 +39,19 @@ class UserController extends BaseController
         return $check;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(20);
-        return $this->render('admin.user.index', compact('users'));
+        $users = User::select('*');
+        if ($request->has('active') && $request->input('active') != -1) {
+            $users->where('active', $request->input('active'));
+        }
+        if ($request->has('type') && $request->input('type') != -1) {
+            $users->where('type', $request->input('type'));
+        }
+        $active = $request->input('active');
+        $type = $request->input('type');
+        $users = $users->paginate(10);
+        return $this->render('admin.user.index', compact('users','active','type'));
     }
 
     /**
@@ -61,16 +73,20 @@ class UserController extends BaseController
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'image' => 'mimes:jpeg,png,jpg|max:10000',
             'name' => 'required|min:8|max:20',
             'email' => 'required|email',
-            'email' => 'required|email',
             'password' => 'required|min:6',
+            'type' => 'required',
             'password_confirm' => 'required|same:password'
         ], [
+            'image.max' => 'Ảnh quá lớn',
+            'image.image' => 'Ảnh không hợp lệ',
             'name.required' => 'Tên không được để trống.',
             'name.min' => 'Tên tối thiểu 8 ký tự',
             'name.max' => 'Tên tối đa 20 ký tự',
             'email.required' => 'Email không được để trống',
+            'type.required' => 'Loại không được để trống',
             'email.email' => 'Email không đúng định dạng',
             'password.required' => 'Password không được để trống.',
             'password.min' => 'Password tối thiểu 6 ký tự',
@@ -90,9 +106,19 @@ class UserController extends BaseController
                 ->withInput();
         }
         $users = new User();
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            $file->storeAs('public/images', $fileName);
+            $users->image = 'storage/images/' . $fileName;
+//                $image->position = $position->max_position ? ++ $position->max_position : 1;
+
+        }
         $users->fill($request->all());
         $users->password = bcrypt($request->password);
         $users->type = $request->input('type');
+        $users->phone_number = $request->input('phone_number');
+        $users->address = $request->input('address');
         $users->save();
 
         return redirect()->route('user.index');
@@ -118,7 +144,7 @@ class UserController extends BaseController
     public function edit($id)
     {
         $user = User::find($id);
-        return $this->render('admin.user.edit',compact('user'));
+        return $this->render('admin.user.edit', compact('user'));
     }
 
     /**
@@ -135,10 +161,12 @@ class UserController extends BaseController
             throw new ModelNotFoundException();
         }
         $validator = Validator::make($request->all(), [
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048',
             'name' => 'min:8|max:20',
             'email' => 'email',
             'type' => 'required',
         ], [
+            'image.image' => 'Ảnh không hợp lệ',
             'name.min' => 'Tên tối thiểu 8 ký tự',
             'name.max' => 'Tên tối đa 20 ký tự',
             'email.email' => 'Email không đúng định dạng',
@@ -150,9 +178,15 @@ class UserController extends BaseController
         }
 //        dd(date('Y-m-d H:i:s'));
         $users = User::find($id);
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            $file->storeAs('public/images', $fileName);
+            $users->image = 'storage/images/' . $fileName;
+
+        }
         $users->fill($request->all());
         $users->save();
-
         return redirect()->route('user.index');
     }
 
@@ -165,27 +199,26 @@ class UserController extends BaseController
     public function destroy(Request $request)
     {
         $users = User::find($request->input('id'));
-        if(!$users){
-            return response()->json(['status' => 0],404);
-        }
-        else{
+        if (!$users) {
+            return response()->json(['status' => 0], 404);
+        } else {
             DB::beginTransaction();
-            try{
-                $response= $users->delete();
+            try {
+                $response = $users->delete();
                 DB::commit();
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollBack();
-                return response()->json(['status' => 0],404);
+                return response()->json(['status' => 0], 404);
             }
-            if ($response){
-                return response()->json(['status' => 1],200);
-            }
-            else{
-                return response()->json(['status' => 0],404);
+            if ($response) {
+                return response()->json(['status' => 1], 200);
+            } else {
+                return response()->json(['status' => 0], 404);
             }
 
         }
     }
+
     public function update_active(Request $request)
     {
         $user_id = Auth::user()->is_root;
@@ -211,4 +244,12 @@ class UserController extends BaseController
         }
     }
 
+    public function update_status(Request $request)
+    {
+        $user = User::find($request->input('id'));
+        $user->active = $request->input('active');
+        $user->save();
+
+        return response()->json(['status' => 1], 200);
+    }
 }

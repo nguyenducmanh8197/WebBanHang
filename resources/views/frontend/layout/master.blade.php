@@ -10,7 +10,7 @@ $user = \Illuminate\Support\Facades\Auth::user();
         @elseif($page === 2)
         <title>Sản phẩm</title>
         @elseif($page === 3)
-        <title>About</title>
+        <title>Bài viết</title>
         @elseif($page === 4)
         <title>Liên hệ</title>
         @elseif($page === 5)
@@ -83,7 +83,7 @@ $user = \Illuminate\Support\Facades\Auth::user();
                             <a href="{{route('frontend_product.index')}}">Sản phẩm</a>
                         </li>
                         <li class="{{$page === 3 ? 'active-menu' : ''}}">
-                            <a href="{{route('frontend_about.index')}}">About</a>
+                            <a href="{{route('frontend_about.index')}}">Bài viết</a>
                         </li>
 
                         <li class="{{$page === 4 ? 'active-menu' : ''}}">
@@ -142,7 +142,7 @@ $user = \Illuminate\Support\Facades\Auth::user();
                 <a href="{{route('frontend_product.index')}}">Sản phẩm</a>
             </li>
             <li class="{{$page === 3 ? 'active-menu' : ''}}">
-                <a href="{{route('frontend_about.index')}}">About</a>
+                <a href="{{route('frontend_about.index')}}">Bài viết</a>
             </li>
 
             <li class="{{$page === 4 ? 'active-menu' : ''}}">
@@ -199,7 +199,7 @@ $user = \Illuminate\Support\Facades\Auth::user();
 
                     <li class="p-b-10">
                         <a href="{{route('frontend_about.index')}}" class="stext-107 cl7 hov-cl1 trans-04">
-                            About
+                            Bài viết
                         </a>
                     </li>
 

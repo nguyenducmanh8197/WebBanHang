@@ -22,7 +22,7 @@
                                 <i class="zmdi zmdi-search"></i>
                             </button>
                             <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="keyword" value="{{$keyword ? $keyword : ''}}"
-                                   placeholder="Search">
+                                   placeholder="Tìm kiếm ... ">
                         </div>
                     </div>
                 </form>
@@ -103,9 +103,9 @@
                                                     </h4>
                                                     <div class="mtext-106 cl2" style="display: flex">
                                                         Giá:   @if($product->product_price_discount == 0)
-                                                            &nbsp;<p>${{number_format($product->product_price)}}₫</p>
+                                                            &nbsp;<p>{{number_format($product->product_price)}}₫</p>
                                                         @else
-                                                            <p style="color: red;"> &nbsp;${{number_format($product->product_price_discount)}}₫</p>&nbsp;&nbsp;<p style="text-decoration: line-through">${{number_format($product->product_price)}}₫</p>
+                                                            <p style="color: red;"> &nbsp;{{number_format($product->product_price_discount)}}₫</p>&nbsp;&nbsp;<p style="text-decoration: line-through">{{number_format($product->product_price)}}₫</p>
                                                         @endif
                                                     </div>
                                                     <p class="stext-102 cl3 p-t-23">
@@ -139,14 +139,14 @@
                                     <div>
                                         @if($product->product_price_discount == 0)
                                             <span class="stext-105 cl3">
-                                                ${{number_format($product->product_price)}}₫
+                                                {{number_format($product->product_price)}}₫
 								            </span>
                                         @else
                                             <span class="stext-105 cl3" style="color: red;">
-                                                ${{number_format($product->product_price_discount)}}₫
+                                                {{number_format($product->product_price_discount)}}₫
 								            </span>
                                             <span class="stext-105 cl3" style="text-decoration: line-through">
-                                                ${{number_format($product->product_price)}}₫
+                                                {{number_format($product->product_price)}}₫
 								            </span>
                                         @endif
                                     </div>

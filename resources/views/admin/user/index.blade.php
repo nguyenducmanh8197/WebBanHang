@@ -4,10 +4,32 @@
            <div class="row">
                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                    <div class="page-header">
-                       <h2 class="pageheader-title">Danh sách người dùng</h2>
+                       <h2 class="pageheader-title">Danh sách tài khoản</h2>
                    </div>
                </div>
            </div>
+           <form action="{{route('user.index')}}">
+               <div class="row">
+                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                       <div class="form-group">
+                           <select class="form-control form-control" name="active" onchange="this.form.submit()">
+                               <option value="-1" {{$active == -1 ? 'selected' : ''}}>Trạng thái</option>
+                               <option value="1" {{$active == 1 ? 'selected' : ''}}>Đang hoạt động</option>
+                               <option value="0" {{$active == 0 ? 'selected' : ''}}>Không hoạt động</option>
+                           </select>
+                       </div>
+                   </div>
+                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                       <div class="form-group">
+                           <select class="form-control form-control" name="type" onchange="this.form.submit()">
+                               <option value="-1" {{$type == -1 ? 'selected' : ''}}>Loại tài khoản</option>
+                               <option value="1" {{$type == 1 ? 'selected' : ''}}>Quản trị</option>
+                               <option value="0" {{$type == 0 ? 'selected' : ''}}>Khách hàng</option>
+                           </select>
+                       </div>
+                   </div>
+               </div>
+           </form>
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="card">
@@ -34,13 +56,13 @@
                                     </thead>
                                     <tbody>
                                     @foreach($users as $user)
-                                        <tr>
+                                        <tr id="imageStatus{{$user->id}}">
                                             <td style="text-align: center">{{$loop->iteration}}</td>
                                             <td><a href="{{route('user.edit',$user->id)}}" class="color">{{$user->name}}</a></td>
                                             <td>{{$user->email}}</td>
                                             <td>{{$user->phone_number}}</td>
-                                            <td>{{$user->type == 1 ? 'Admin' : 'Khách hàng'}}</td>
-                                            <td style="text-align: center" class="account_active">
+                                            <td>{{$user->type == 1 ? 'Quản trị' : 'Khách hàng'}}</td>
+                                            <td style="text-align: center" class="image_Status">
                                                 @if($user->active == 1)
                                                     <span  class="badge badge-pill badge-success">Đang hoạt động</span>
                                                 @elseif($user->active == 0)
@@ -48,7 +70,7 @@
                                                 @endif
                                             </td>
                                             <td style="text-align: center" >
-                                                <a href="" style="margin-right: 10px;" class="btn-account-lock" data-id="{{$user->id}}" data-active="{{$user->active}}" >
+                                                <a href="" style="margin-right: 10px;" class="btn-company-lock" data-value="{{$user->active}}" data-id="{{$user->id}}" >
                                                     <i class="fa fa-fw {{$user->active == 1 ? 'fa-lock' : 'fa-unlock'}}"></i>
                                                 </a>
                                                 <a href="javascript:;"  id="confirm_delete" onclick="confirmRemove({{$user->id}})"><i class=" fas fa-trash"></i></a>
@@ -107,33 +129,34 @@
             });
         }
 
-        function onUpdateAccount(id, active){
-            var parent = $('#account_' + id);
+        function onUpdate(id, active){
+            var parent = $('#imageStatus' + id);
             $.ajax({
                 type:'POST',
-                url:'{{route('user.update_active')}}',
+                url:'{{route('user.update_status')}}',
                 data:{id:id, active:active},
                 success:function(data){
-                    if(data.status === '1'){
-                        parent.find('.btn-account-lock').attr('data-active', active);
+                    var rs = data;
+                    if(rs.status == 1){
+                        parent.find('.btn-company-lock').attr('data-value', active);
                         if(active) {
-                            parent.find('.account_active > span').removeClass('badge-warning').addClass('badge-success').html('Đang hoạt động');
-                            parent.find('.btn-account-lock > i').removeClass('fa-unlock').addClass('fa-lock');
+                            parent.find('.image_Status > span').removeClass('badge-warning').addClass('badge-success').html('Đang hoạt động');
+                            parent.find('.btn-company-lock > i').removeClass('fa-unlock').addClass('fa-lock');
                         }else{
-                            parent.find('.account_active > span').removeClass('badge-success').addClass('badge-warning').html('Không hoạt động');
-                            parent.find('.btn-account-lock > i').removeClass('fa-lock').addClass('fa-unlock');
+                            parent.find('.image_Status > span').removeClass('badge-success').addClass('badge-warning').html('Không hoạt động');
+                            parent.find('.btn-company-lock > i').removeClass('fa-lock').addClass('fa-unlock');
                         }
                     }else{
-                        bootbox.alert("Bạn không có quyền.");
+                        alert('Lỗi');
                     }
                 }
             });
         }
-        $(".btn-account-lock").click(function(e){
+        $(".btn-company-lock").click(function(e){
             e.preventDefault();
             var id = $(this).data('id');
-            var active = $(this).attr('data-active') == '1' ? 0 : 1;
-            onUpdateAccount(id,active);
+            var status = $(this).attr('data-value') == '1' ? 0 : 1;
+            onUpdate(id, status);
         });
     </script>
 @endsection

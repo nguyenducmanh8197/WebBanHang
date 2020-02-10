@@ -12,7 +12,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('{id}/edit', 'UserController@edit')->name('user.edit');
             Route::post('{id}/update', 'UserController@update')->name('user.update');
             Route::post('delete', 'UserController@destroy')->name('user.destroy');
-            Route::post('update_active', 'UserController@update_active')->name('user.update_active');
+            Route::post('update_active', 'UserController@update_status')->name('user.update_status');
         });
         Route::group(['prefix' => 'slide'], function () {
             Route::get('', 'SlideController@index')->name('slide.index');

@@ -48,13 +48,11 @@
                                         @endif
                                     </td>
                                     <td style="text-align: center" >
-                                        <a href="">
-                                            <button type="button" data-value="{{$slide->active}}" data-id="{{$slide->id}}" class="btn btn-danger btn-sm btn-company-lock">
+                                        <a href="" data-value="{{$slide->active}}" data-id="{{$slide->id}}" class="btn-company-lock">
                                                 <i class="fa fa-fw {{$slide->active == 1 ? 'fa-lock' : 'fa-unlock'}}"></i>
-                                            </button>
                                         </a>
-                                        <a href="{{route('slide.edit',$slide->id)}}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <a href="javascript:;" class="btn btn-danger btn-custom btn-sm" id="confirm_delete" onclick="confirmRemove({{$slide->id}})"><i class=" fas fa-trash"></i></a>
+                                        <a href="{{route('slide.edit',$slide->id)}}" ><i class="fas fa-edit"></i></a>
+                                        <a href="javascript:;"  id="confirm_delete" onclick="confirmRemove({{$slide->id}})"><i class=" fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
